@@ -6,7 +6,8 @@
     <home-swiper :banners="banners"></home-swiper>
     <Recommend-View :recommends="recommends"></Recommend-View>
     <FashionView />
-
+    <TabControl :title="['流行','新款','精选']"
+                class="tab-control" />
     <ul>
       <li></li>
       <li></li>
@@ -98,29 +99,55 @@
 </template>
 <script>
 import NarBar from 'components/common/navbar/NavBar'
+import TabControl from 'components/content/TabControl'
+
 import HomeSwiper from './childComps/HomeSwiper'
 import RecommendView from './childComps/RecommendView'
 import FashionView from './childComps/FashionView'
-import { getMultidata } from 'network/home'
+
+import { getMultidata, getGoods } from 'network/home'
 export default {
   data () {
     return {
       banners: [],
-      recommends: []
+      recommends: [],
+      //所有产品数据
+      goods: {
+        'pop': { page: 0, list: [] },
+        'new': { page: 0, list: [] },
+        'sell': { page: 0, list: [] },
+      }
     }
   },
   components: {
     NarBar,
+    TabControl,
     HomeSwiper,
     RecommendView,
     FashionView
   },
-  mounted () {
-    getMultidata().then(res => {
-      console.log(res.data.recommend.list)
-      this.banners = res.data.banner.list
-      this.recommends = res.data.recommend.list
-    })
+  created () {
+    // 1. 请求bannner数据
+    this.getMultidata()
+    // 2. 请求商品数据(流行，新款，精选 三类)
+    this.getGoods('pop')
+    this.getGoods('new')
+    this.getGoods('sell')
+  },
+  methods: {
+    getMultidata () {
+      getMultidata().then(res => {
+        this.banners = res.data.banner.list
+        this.recommends = res.data.recommend.list
+      })
+    },
+    getGoods (type) {
+      let page = this.goods[type].page + 1
+      getGoods(type, page).then(res => {
+        this.goods[type].list.push(...res.data.list)
+        this.goods[type].page += 1
+      })
+    }
   }
 }
 </script>
@@ -136,5 +163,10 @@ export default {
   left: 0;
   z-index: 9;
   width: 100%;
+}
+.tab-control {
+  position: sticky;
+  top: 44px;
+  background-color: #fff;
 }
 </style>

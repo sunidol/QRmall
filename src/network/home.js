@@ -6,3 +6,13 @@ export function getMultidata () {
     url: '/home/multidata'
   })
 }
+
+export function getGoods (type, page) {
+  return axiosHttp({
+    url: '/home/data',
+    params: {
+      type,
+      page
+    }
+  })
+}
