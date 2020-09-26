@@ -3,103 +3,23 @@
     <NarBar class="nav-bar">
       <div slot="center">琪润购物街</div>
     </NarBar>
-    <home-swiper :banners="banners"></home-swiper>
-    <Recommend-View :recommends="recommends"></Recommend-View>
+    <home-swiper :banners="banners" />
+    <Recommend-View :recommends="recommends" />
     <FashionView />
     <TabControl :title="['流行','新款','精选']"
-                class="tab-control" />
+                class="tab-control"
+                @tabChange="tabChange" />
+    <GoodsList :goods="goods[currentTab].list" />
     <ul>
       <li></li>
       <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-      <li></li>
-
     </ul>
   </div>
 </template>
 <script>
 import NarBar from 'components/common/navbar/NavBar'
 import TabControl from 'components/content/TabControl'
+import GoodsList from 'components/content/goods/GoodsList'
 
 import HomeSwiper from './childComps/HomeSwiper'
 import RecommendView from './childComps/RecommendView'
@@ -116,12 +36,14 @@ export default {
         'pop': { page: 0, list: [] },
         'new': { page: 0, list: [] },
         'sell': { page: 0, list: [] },
-      }
+      },
+      currentTab: 'pop'
     }
   },
   components: {
     NarBar,
     TabControl,
+    GoodsList,
     HomeSwiper,
     RecommendView,
     FashionView
@@ -135,6 +57,27 @@ export default {
     this.getGoods('sell')
   },
   methods: {
+    /**
+     * 事件监听
+     */
+    tabChange (index) {
+      switch (index) {
+        case 0:
+          this.currentTab = 'pop'
+          break
+        case 1:
+          this.currentTab = 'new'
+          break
+        case 2:
+          this.currentTab = 'sell'
+          break
+      }
+
+    },
+
+    /**
+     * 网络请求相关方法
+     */
     getMultidata () {
       getMultidata().then(res => {
         this.banners = res.data.banner.list
@@ -168,5 +111,6 @@ export default {
   position: sticky;
   top: 44px;
   background-color: #fff;
+  z-index: 9;
 }
 </style>

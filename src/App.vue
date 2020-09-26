@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import TabbarView from 'components/context/TabbarView'
+import TabbarView from 'components/content/TabbarView'
 export default {
   name: 'app',
   components: {

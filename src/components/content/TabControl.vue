@@ -25,6 +25,7 @@ export default {
   methods: {
     selectItem (index) {
       this.currentIdx = index
+      this.$emit('tabChange', index)
     }
   }
 }
