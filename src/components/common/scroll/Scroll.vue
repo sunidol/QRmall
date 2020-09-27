@@ -22,13 +22,16 @@ export default {
     }
   },
   mounted () {
+    // 1、创建BScroll对象
     this.betScroll = new BScroll(this.$refs.scrollDiv, {
       click: true,
       probeType: this.probeType
     })
+    // 2、监听滚动位置
     this.betScroll.on('scroll', (position) => {
       this.$emit('scrollPosition', position)
     })
+    // 3、监听上拉事件
   },
   methods: {
     scrollTo (x, y, time = 300) {
