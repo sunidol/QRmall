@@ -3,13 +3,20 @@
     <NarBar class="nav-bar">
       <div slot="center">琪润购物街</div>
     </NarBar>
-    <home-swiper :banners="banners" />
-    <Recommend-View :recommends="recommends" />
-    <FashionView />
-    <TabControl :title="['流行','新款','精选']"
-                class="tab-control"
-                @tabChange="tabChange" />
-    <GoodsList :goods="goods[currentTab].list" />
+    <Scroll class="scrollItem"
+            ref="scrollRef"
+            :probeType="3"
+            @scrollPosition="YPosition">
+      <home-swiper :banners="banners" />
+      <Recommend-View :recommends="recommends" />
+      <FashionView />
+      <TabControl :title="['流行','新款','精选']"
+                  class="tab-control"
+                  @tabChange="tabChange" />
+      <GoodsList :goods="goods[currentTab].list" />
+    </Scroll>
+    <BackTop @click.native="backtop"
+             v-show="isShowBackTop" />
     <ul>
       <li></li>
       <li></li>
@@ -20,6 +27,8 @@
 import NarBar from 'components/common/navbar/NavBar'
 import TabControl from 'components/content/TabControl'
 import GoodsList from 'components/content/goods/GoodsList'
+import Scroll from 'components/common/scroll/Scroll'
+import BackTop from 'components/content/backTop'
 
 import HomeSwiper from './childComps/HomeSwiper'
 import RecommendView from './childComps/RecommendView'
@@ -37,13 +46,16 @@ export default {
         'new': { page: 0, list: [] },
         'sell': { page: 0, list: [] },
       },
-      currentTab: 'pop'
+      currentTab: 'pop',
+      isShowBackTop: false
     }
   },
   components: {
     NarBar,
     TabControl,
     GoodsList,
+    Scroll,
+    BackTop,
     HomeSwiper,
     RecommendView,
     FashionView
@@ -72,9 +84,13 @@ export default {
           this.currentTab = 'sell'
           break
       }
-
     },
-
+    backtop () {
+      this.$refs.scrollRef.scrollTo(0, 0, 800)
+    },
+    YPosition (position) {
+      this.isShowBackTop = (-position.y) > 1000
+    },
     /**
      * 网络请求相关方法
      */
@@ -97,6 +113,8 @@ export default {
 <style scoped>
 #home {
   padding-top: 44px;
+  height: 100vh;
+  position: relative;
 }
 .nav-bar {
   background-color: var(--color-tint);
@@ -104,7 +122,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 9;
+  z-index: 10;
   width: 100%;
 }
 .tab-control {
@@ -112,5 +130,12 @@ export default {
   top: 44px;
   background-color: #fff;
   z-index: 9;
+}
+.scrollItem {
+  /* height: 300px; */
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  overflow: hidden;
 }
 </style>
