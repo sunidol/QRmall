@@ -1,7 +1,9 @@
 <template>
-  <div class="good-item">
+  <div class="good-item"
+       @click="itemDetail">
     <img :src="goodItem.show.img"
-         alt="">
+         alt=""
+         @load="imgLoad">
     <div class="good-info">
       <p>{{goodItem.title}}</p>
       <span class="price">{{goodItem.price}}</span>
@@ -17,6 +19,17 @@ export default {
       default () {
         return {}
       }
+    }
+  },
+  methods: {
+    imgLoad () {
+      // console.log('图片加载完成就会调用该函数')
+      //betterScroll需要监听每一张图片是否加载完成，加载完成就让scroll实例调用refresh
+      this.$bus.$emit('imgLoadFinished')
+    },
+    itemDetail () {
+      // console.log(this.goodItem.iid)
+      this.$router.push('/detail/' + this.goodItem.iid)
     }
   }
 }

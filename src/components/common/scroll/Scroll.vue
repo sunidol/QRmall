@@ -14,6 +14,10 @@ export default {
     probeType: {
       type: Number,
       default: 0
+    },
+    pullUpLoad: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -25,17 +29,33 @@ export default {
     // 1、创建BScroll对象
     this.betScroll = new BScroll(this.$refs.scrollDiv, {
       click: true,
-      probeType: this.probeType
+      probeType: this.probeType,
+      pullUpLoad: this.pullUpLoad
     })
+
     // 2、监听滚动位置
-    this.betScroll.on('scroll', (position) => {
-      this.$emit('scrollPosition', position)
-    })
+    if (this.probeType === 2 || this.probeType === 3) {
+      this.betScroll.on('scroll', (position) => {
+        this.$emit('scrollPosition', position)
+      })
+    }
+
     // 3、监听上拉事件
+    if (this.pullUpLoad) {
+      this.betScroll.on('pullingUp', () => {
+        this.$emit('pullingUp')
+      })
+    }
   },
   methods: {
     scrollTo (x, y, time = 300) {
-      this.betScroll.scrollTo(x, y, time)
+      this.betScroll && this.betScroll.scrollTo(x, y, time)
+    },
+    finishPullUp () {
+      this.betScroll && this.betScroll.finishPullUp()
+    },
+    refreshImg () {
+      this.betScroll && this.betScroll.refresh()
     }
   }
 }
