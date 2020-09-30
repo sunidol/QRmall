@@ -24,11 +24,12 @@ export class GoodsInfo {
 
 export class ShopInfo {
   constructor(shopInfo) {
-    this.logo = shopInfo.logo
+    this.logo = shopInfo.shopLogo
     this.name = shopInfo.name
     this.fans = shopInfo.cFans
     this.score = shopInfo.score
     this.sells = shopInfo.cSells
     this.goodsCount = shopInfo.cGoods
+    this.shopUrl = shopInfo.allGoodsUrl
   }
 }

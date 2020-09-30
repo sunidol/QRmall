@@ -50,6 +50,7 @@ export default {
 .info-price {
   margin-top: 15px;
   position: relative;
+  /* line-height: 27px; */
 }
 .info-price .n-price {
   font-size: 24px;
@@ -66,10 +67,10 @@ export default {
   color: #ffffff;
   padding: 3px;
   font-size: 12px;
-  border-radius: 5px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-40px);
+  border-radius: 9px;
+  position: relative;
+  left: 0.3rem;
+  top: -0.4rem;
 }
 .info-other {
   display: flex;

@@ -3,7 +3,8 @@
     <SwiperItem v-for="(item,index) in swiperImg"
                 :key="index ">
       <img :src="item"
-           alt="">
+           alt=""
+           @load="imgLoad">
     </SwiperItem>
   </Swiper>
 </template>
@@ -21,6 +22,14 @@ export default {
   components: {
     Swiper,
     SwiperItem
+  },
+  methods: {
+    imgLoad () {
+      if (!this.imgLoadFlag) {
+        this.$emit('swiperImgLoad')
+        this.imgLoadFlag = true
+      }
+    }
   }
 }
 </script>

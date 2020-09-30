@@ -25,10 +25,6 @@
     </Scroll>
     <BackTop @click.native="backtop"
              v-show="isShowBackTop" />
-    <ul>
-      <li></li>
-      <li></li>
-    </ul>
   </div>
 </template>
 <script>
