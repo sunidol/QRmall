@@ -36,6 +36,7 @@ export default {
     },
     changeTitle (index) {
       this.currentIdx = index
+      this.$emit('themeClick', index)
     }
   }
 }

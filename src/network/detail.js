@@ -8,6 +8,11 @@ export function getDetail (iid) {
     }
   })
 }
+export function getRecommend () {
+  return axiosHttp({
+    url: '/recommend'
+  })
+}
 
 export class GoodsInfo {
   constructor(itemInfo, columns, services) {
@@ -15,6 +20,7 @@ export class GoodsInfo {
     this.desc = itemInfo.desc
     this.newPrice = itemInfo.price
     this.oldPrice = itemInfo.oldPrice
+    this.realPrice = itemInfo.lowNowPrice
     this.discount = itemInfo.discountDesc
     this.columns = columns
     this.services = services
@@ -31,5 +37,13 @@ export class ShopInfo {
     this.sells = shopInfo.cSells
     this.goodsCount = shopInfo.cGoods
     this.shopUrl = shopInfo.allGoodsUrl
+  }
+}
+
+export class GoodsParam {
+  constructor(info, rule) {
+    this.info = info.set
+    this.size = rule.tables
+    this.image = info.image ? info.images[0] : ''
   }
 }

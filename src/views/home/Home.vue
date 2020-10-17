@@ -32,7 +32,7 @@ import NarBar from 'components/common/navbar/NavBar'
 import TabControl from 'components/content/TabControl'
 import GoodsList from 'components/content/goods/GoodsList'
 import Scroll from 'components/common/scroll/Scroll'
-import BackTop from 'components/content/backTop'
+// import BackTop from 'components/content/backTop'
 
 import HomeSwiper from './childComps/HomeSwiper'
 import RecommendView from './childComps/RecommendView'
@@ -40,6 +40,7 @@ import FashionView from './childComps/FashionView'
 
 import { getMultidata, getGoods } from 'network/home'
 import { debounce } from 'common/utils'
+import { itemImgListenerMixin, showBackTop } from 'common/mixin'
 export default {
   data () {
     return {
@@ -52,10 +53,12 @@ export default {
         'sell': { page: 0, list: [] },
       },
       currentTab: 'pop',
-      isShowBackTop: false,
+      // isShowBackTop: false,
       tabControlOffsetTop: 0,
       isShowTabControl: false,
-      getYPosition: 0
+      getYPosition: 0,
+      // //监听的图片加载的全局事件。可以放到混入mixin中定义
+      // itemImgListener: null
     }
   },
   components: {
@@ -63,11 +66,12 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop,
+    // BackTop,
     HomeSwiper,
     RecommendView,
     FashionView
   },
+  mixins: [itemImgListenerMixin, showBackTop],
   created () {
     // 1. 请求bannner数据
     this.getMultidata()
@@ -77,19 +81,23 @@ export default {
     this.getGoods('sell')
   },
   mounted () {
-    // 图片加载完成的事件监听
-    const refresh = debounce(this.$refs.scrollRef.refreshImg, 200)
-    // 通过事件总线进行通讯。首页商品图片加载完成时，就应该调用refresh
-    this.$bus.$on('imgLoadFinished', () => {
-      refresh()
-    })
+    // // 图片加载完成的事件监听
+    // const refresh = debounce(this.$refs.scrollRef.refreshImg, 200)
+    // // 通过事件总线进行通讯。首页商品图片加载完成时，就应该调用refresh
+    // this.itemImgListener = () => {
+    //   refresh()
+    // }
+    // this.$bus.$on('imgLoadFinished', this.itemImgListener)
   },
   activated () {
     this.$refs.scrollRef.scrollTo(0, this.getYPosition, 0)
     this.$refs.scrollRef.refreshImg()
   },
   deactivated () {
+    //保存Y值
     this.getYPosition = this.$refs.scrollRef.betScroll.y
+    //取消全局事件的监听（产品图片加载是否完成）
+    this.$bus.$off('imgLoadFinished', this.itemImgListener)
   },
   methods: {
     /**
@@ -114,8 +122,9 @@ export default {
       this.$refs.scrollRef.scrollTo(0, 0, 800)
     },
     YPosition (position) {
-      //1-判断BackTop是否显示
-      this.isShowBackTop = (-position.y) > 1000
+      //1-判断BackTop是否显示（因为这部分detail页面也会用到，故可以将它提取到mixin中）
+      // this.isShowBackTop = (-position.y) > 1000
+      this.showBack(position)
       //2-决定tabControl是否在顶部停留
       this.isShowTabControl = (-position.y) > this.tabControlOffsetTop
     },

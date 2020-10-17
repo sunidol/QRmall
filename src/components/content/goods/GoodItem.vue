@@ -1,7 +1,7 @@
 <template>
   <div class="good-item"
        @click="itemDetail">
-    <img :src="goodItem.show.img"
+    <img :src="showImg"
          alt=""
          @load="imgLoad">
     <div class="good-info">
@@ -21,15 +21,31 @@ export default {
       }
     }
   },
+  computed: {
+    showImg () {
+      return this.goodItem.image || this.goodItem.show.img
+    }
+  },
   methods: {
     imgLoad () {
       // console.log('图片加载完成就会调用该函数')
       //betterScroll需要监听每一张图片是否加载完成，加载完成就让scroll实例调用refresh
       this.$bus.$emit('imgLoadFinished')
+
+      //为了让监听事件在不同路由时，发送给不同组件，可以用条件判断,还有一个办法就是及时取消home页面的事件监听
+      // if(this.$route.path.indexOf('/home')){
+      //   this.$bus.$emit('homeImgLoadFinished')
+      // }else if(this.$route.path.indexOf('/detail')){
+      //   this.$bus.$emit('detailImgLoadFinished')
+      // }
     },
     itemDetail () {
       // console.log(this.goodItem.iid)
-      this.$router.push('/detail/' + this.goodItem.iid)
+      if (this.goodItem.iid !== undefined) {
+        this.$router.push('/detail/' + this.goodItem.iid)
+      } else {
+        window.location.href = this.goodItem.item_url
+      }
     }
   }
 }
